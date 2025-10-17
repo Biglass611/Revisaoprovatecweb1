@@ -1,10 +1,8 @@
 package com.example.Lucas.service;
 
-package com.example.demo.service;
-
-import com.example.Lucas.repository.UserRepository;
-import com.example.demo.entity.User;
-import com.example.demo.repository.UserRepository;
+import com.example.Lucas.config.UserDetailsImpl;
+import com.example.Lucas.entity.Funcionario;
+import com.example.Lucas.repository.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,12 +13,14 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    private FuncionarioRepository funcionarioRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
-        return new UserDetailsImpl(user);
+        Funcionario funcionario = funcionarioRepository.findByMatricula(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado."));
+
+        return new UserDetailsImpl(funcionario);
     }
 
 }
